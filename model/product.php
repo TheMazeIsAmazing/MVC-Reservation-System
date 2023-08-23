@@ -29,7 +29,7 @@ class product_model
 
     public static function all()
     {
-    //list of al comments
+        //list of al comments
         $list = [];
         $db = Db::getInstance();
         $result = mysqli_query($db, 'SELECT * FROM product');
