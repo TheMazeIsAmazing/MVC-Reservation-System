@@ -1,5 +1,5 @@
 
-<!-- a simple view, outputing all the comments -->
+<!-- a simple view, outputting all the comments -->
 <?php include "view/header.php"?>
 
 <br>
@@ -48,45 +48,59 @@
 
 
 <script>
-    $(document).ready(function(){
-
-        $("#productForm").submit(function(e) {
-
-            var url = "index.php?controller=product&action=add"; // the script where you handle the form input.
-
-            $.ajax({
-                type: "POST",
-                url: url,
-                data: $("#productForm").serialize(), // serializes the form's elements.
-                success: function(data)
-                {
-                    //alert(data); // show response from the php script.
-                }
-            });
-            e.preventDefault(); // avoid to execute the actual submit of the form.
-            showProducts();
-        });
-
-
-    });
-
-
     function showProducts() {
-        $.get("http://localhost/webP/ex2/index.php?controller=product&action=showAll", function (data) {
-            $("#products").html(data);
-        });
+        let url = "index.php?controller=product&action=showAll";
+
+        let xhr = new XMLHttpRequest();
+        xhr.open("GET", url, true);
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                productsContainer.innerHTML = xhr.responseText;
+            }
+        };
+        xhr.send();
     }
 
-    function deleteProductAJAX($event) {
-        $.ajax({
-                url: $event,
-                success: function(response) {
-                    //alert(response);
-                }
-            });
+    function deleteProductAJAX(event) {
+        let url = event.href;
+
+        let xhr = new XMLHttpRequest();
+        xhr.open("GET", url, true);
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                // Handle successful response if needed
+            }
+        };
+        xhr.send();
+
         event.preventDefault();
         showProducts();
     }
+
+    document.addEventListener("DOMContentLoaded", function () {
+        let productForm = document.getElementById("productForm");
+        let productsContainer = document.getElementById("products");
+
+        productForm.addEventListener("submit", function (e) {
+            e.preventDefault();
+
+            let url = "index.php?controller=product&action=add";
+            let formData = new FormData(productForm);
+
+            let xhr = new XMLHttpRequest();
+            xhr.open("POST", url, true);
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    // Handle successful response if needed
+                }
+            };
+            xhr.send(formData);
+
+            showProducts();
+        });
+
+    });
+
 
 
 </script>
